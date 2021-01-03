@@ -1,0 +1,62 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Oauth2 Server</title>
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.11.2/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <link href="../css/css.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+            </ul>
+        </nav>
+        <h3 class="text-muted">OAuth2 Server 用户列表</h3>
+    </div>
+
+<!--    <c:if test="${not empty msg}">-->
+<!--        <div class="alert alert-danger" role="alert">${msg}</div>-->
+<!--    </c:if>-->
+
+    <div>
+        <h3><a href="create.html">用户新增</a></h3>
+    </div>
+
+    <table class="table table-bordered table-hover table-condensed">
+        <thead>
+        <tr>
+            <th>用户名</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+<!--        <c:forEach items="${clientList}" var="client">-->
+<!--            <tr>-->
+<!--                <td>${client.clientName}</td>-->
+<!--                <td>${client.clientId}</td>-->
+<!--                <td>${client.clientSecret}</td>-->
+<!--                <td>-->
+<!--<a href="${pageContext.request.contextPath}/user/${user.id}/update">修改</a>-->
+<!--<a href="${pageContext.request.contextPath}/user/${user.id}/delete">删除</a>-->
+<!--<a href="${pageContext.request.contextPath}/user/${user.id}/changePassword">改密</a>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--        </c:forEach>-->
+        </tbody>
+    </table>
+
+    <footer class="footer">
+        <p>&copy; Company 2021</p>
+    </footer>
+
+</div> <!-- /container -->
+</body>
+</html>

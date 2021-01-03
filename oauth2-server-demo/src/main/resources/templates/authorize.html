@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>授权访问</title>
+</head>
+<body>
+
+<h2>授权</h2>
+
+<div>
+    <p th:text="${error?.msg}"></p>
+</div>
+
+<div>
+    <form id="loginForm" th:if="${user} eq null">
+        用户名：<input type="text" id="username" name="username"><br/><br/>
+        密&nbsp;&nbsp;&nbsp;码：<input type="password" id="password" name="password"><br/><br/>
+        <button id="loginBtn" type="button">登录</button>
+    </form>
+    <div>
+        用户ID：<span id="userid" th:text="${user?.id}"></span><br/>
+        用户名：<span id="name" th:text="${user?.username}"></span><br/>
+    </div>
+    <span id="loginResult"></span>
+</div>
+
+<div>
+    应用名称：<span th:text="${client?.clientName}"></span><br>
+    申请资源：<span th:text="${authRequest?.scope}"></span>
+    <form id="authorizeForm" action="/authorize/confirm" method="post">
+        授权内容：<input name="scope" value=""><br/>
+        <input type="submit" value="确认授权"/>
+    </form>
+</div>
+
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+
+    $("#loginBtn").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/login",
+            data: $("#loginForm").serialize(),
+            dataType: "JSON",
+            success: function (data) {
+                if(data.code){
+                    alert(data.message || '登录失败');
+                }else{
+                    $('#loginForm').hide();
+                    $('#userid').text(data.id||'');
+                    $('#name').text(data.name||'');
+                    $('#loginResult').text(data.message || "登录成功");
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#loginResult').text(JSON.stringify({
+                    "status": jqXHR.status,
+                    "statusText": jqXHR.statusText,
+                    "responseText": jqXHR.responseText,
+                    "textStatus": textStatus
+                    }) ||'登录失败'
+                );
+            }
+        });
+    });
+
+</script>
+</body>
+</html>

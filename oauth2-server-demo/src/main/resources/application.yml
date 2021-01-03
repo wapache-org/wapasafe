@@ -1,0 +1,53 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  # 引擎模板配置
+  thymeleaf:
+    cache: false # 关闭缓存
+    mode: LEGACYHTML5 # 去除htm5严格校验
+    prefix: classpath:/templates/ # 指定 thymeleaf 模板路径
+    suffix: .html
+    encoding: UTF-8 # 指定字符集编码
+    content-type: text/html
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:h2test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    platform: h2
+    username: sa
+    password:
+    schema: classpath:sql/schema.sql
+    data: classpath:sql/data.sql
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+  h2:
+    console:
+      enabled: true
+      path: /console
+      settings:
+        trace: false
+        web-allow-others: false
+logging:
+  level:
+    root: INFO
+
+#password md5 salt encrypt
+password:
+  algorithmName: md5
+  hashIterations: 2
+
+springdoc:
+  version: 0.1.2
+  show-login-endpoint: true
+  swagger-ui:
+    path: /docs/swagger-ui.html
+

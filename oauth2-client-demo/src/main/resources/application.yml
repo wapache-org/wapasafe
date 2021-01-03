@@ -1,0 +1,12 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /
+logging:
+  level:
+    root: INFO
+springdoc:
+  version: 0.1.2
+#  packages-to-scan: *
+#  paths-to-match: /*
+

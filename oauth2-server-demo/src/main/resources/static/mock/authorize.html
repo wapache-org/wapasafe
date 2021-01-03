@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>模拟授权访问</title>
+    <style>
+        label {
+            width: 120px;
+            display: inline-block;
+            text-align: right;
+        }
+        input, textarea {
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>1、模拟授权申请</h2>
+
+提交授权申请后会跳转到<b>用户授权界面</b>，用户授权后会返回到本界面。<br/><br/>
+请在用户授权提交后，通过观察<b>浏览器URL</b>上的参数来判断<b>授权结果</b>。<br/><br/>
+
+<div>
+    <form id="authorizeForm" action="/authorize" method="post">
+        <input type="hidden" name="response_type" value="code" />
+        <label>应用ID：</label><input type="text" name="client_id" value="c1ebe466-1cdc-4bd3-ab69-77c3561b9dee"><br/><br/>
+        <label>回调地址：</label><input name="redirect_uri" value="/mock/authorize.html"><br/><br/>
+        <label>授权内容：</label><input name="scope" value="a:b"><br/><br/>
+        <label></label><input type="submit" value="申请授权"/>
+    </form>
+</div>
+
+<h2>2、模拟换取令牌</h2>
+如果授权通过，请将浏览器URL上的code赋值到授权码输入框。<br/><br/>
+<div>
+    <form id="accessForm" action="/accessToken" method="post">
+        <input type="hidden" name="grant_type" value="authorization_code" />
+        <label>应用ID：</label><input type="text" name="client_id" value="c1ebe466-1cdc-4bd3-ab69-77c3561b9dee"><br/><br/>
+        <label>应用密钥：</label><input type="text" name="client_secret" value="d8346ea2-6017-43ed-ad68-19c0f971738b"><br/><br/>
+        <label>回调地址：</label><input name="redirect_uri" value="/mock/authorize.html"><br/><br/>
+        <label>授权码：</label><input type="text" name="code" value=""><br/><br/>
+    </form>
+    <label></label><input type="button" id="accessBtn" value="换取访问令牌"/>
+</div>
+
+<h3>2.1、换取令牌结果</h3>
+<div>
+    <label>过期时间：</label><span id="expireTime"></span><br/>
+    <label>令牌内容：</label><input type="text" id="accessToken" name="access_token" value=""><br/>
+    <span id="getTokenResult"></span>
+</div>
+
+<h2>3、模拟获取资源</h2>
+<div>
+    <label></label><input type="button" id="checkAccessBtn" value="检查令牌"/><br/><br/>
+    <label></label><input type="button" id="getResourceBtn" value="获取资源"/><br/><br/>
+    <label>资源内容：</label><textarea id="resource" rows="5"></textarea>
+</div>
+
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript">
+
+    $("#accessBtn").click(function () {
+        $.ajax({
+            type: "POST",
+            url: $("#accessForm").attr("action"),
+            data: $("#accessForm").serialize(),
+            success: function (data) {
+                $('#expireTime').text(data.expires_in||'');
+                $('#accessToken').val(data.access_token||'');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#getTokenResult').text(JSON.stringify({
+                    "status": jqXHR.status,
+                    "statusText": jqXHR.statusText,
+                    "responseText": jqXHR.responseText,
+                    "textStatus": textStatus
+                    }) ||'失败'
+                );
+            }
+        });
+    });
+
+    $("#checkAccessBtn").click(function () {
+        $.ajax({
+            type: "GET",
+            url: '/accessToken/check',
+            data: {
+                "access_token" : $('#accessToken').val()
+            },
+            success: function (data) {
+                $('#resource').val(data ? JSON.stringify(data) : '令牌有效');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#resource').val(JSON.stringify({
+                    "status": jqXHR.status,
+                    "statusText": jqXHR.statusText,
+                    "responseText": jqXHR.responseText || '令牌无效',
+                    "textStatus": textStatus
+                    })
+                );
+            }
+        });
+    });
+
+    $("#getResourceBtn").click(function () {
+        $.ajax({
+            type: "GET",
+            url: '/resource',
+            data: {
+                "access_token" : $('#accessToken').val()
+            },
+            success: function (data) {
+                $('#resource').val(JSON.stringify(data)||'成功');
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                $('#resource').val(JSON.stringify({
+                    "status": jqXHR.status,
+                    "statusText": jqXHR.statusText,
+                    "responseText": jqXHR.responseText,
+                    "textStatus": textStatus
+                    }) ||'失败'
+                );
+            }
+        });
+    });
+
+</script>
+
+</body>
+</html>
